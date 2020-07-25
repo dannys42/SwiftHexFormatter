@@ -28,8 +28,8 @@ public class HexFormatter: Formatter {
         var prefix: NSAttributedString
         var suffix: NSAttributedString
 
-        static let none = AttributedWrap(prefix: NSAttributedString(),
-                                         suffix: NSAttributedString())
+        static let none = AttributedWrap(prefix: NSAttributedString(string: ""),
+                                         suffix: NSAttributedString(string: ""))
     }
 
     public var offsetStyle: OffsetStyle = .standard
@@ -67,7 +67,7 @@ public class HexFormatter: Formatter {
         var formatCode: String
         switch self.offsetStyle {
         case .none:
-            return NSAttributedString()
+            return NSAttributedString(string: "")
         case .short:
             formatLength = "04"
         case .standard:
@@ -135,7 +135,7 @@ public class HexFormatter: Formatter {
 
         switch self.asciiStyle {
         case .none:
-            return NSAttributedString()
+            return NSAttributedString(string: "")
         case .standard:
             break
         }
