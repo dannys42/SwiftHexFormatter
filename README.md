@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dannys42/SwiftHexFormatter.svg?branch=master)](https://travis-ci.org/dannys42/SwiftHexFormatter)
+
 # HexFormatter
 
 *HexFormatter* is a flexible Swift formatter for outputting hex data.  Features:
