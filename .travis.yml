@@ -5,6 +5,8 @@ branches:
   only:
     - master
 
+language: swift
+
 matrix:
   include:
     - os: linux

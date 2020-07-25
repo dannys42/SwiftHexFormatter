@@ -7,9 +7,10 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 	cd ..
 	export SWIFT_VERSION=swift-5.2.4
     wget https://swift.org/builds/${SWIFT_VERSION}-release/ubuntu1804/${SWIFT_VERSION}-RELEASE/${SWIFT_VERSION}-RELEASE-ubuntu18.04.tar.gz
-	tar xzf $SWIFT_VERSION-ubuntu18.04.tar.gz
-	export PATH="${PWD}/${SWIFT_VERSION}-ubuntu18.04/usr/bin:${PATH}"
+	tar xzf $SWIFT_VERSION-RELEASE-ubuntu18.04.tar.gz
+	export PATH="${PWD}/${SWIFT_VERSION}-RELEASE-ubuntu18.04/usr/bin:${PATH}"
 	cd "$DIR"
+    swift -version
 else
 	#export SWIFT_VERSION=swift-3.1.1-RELEASE
     #curl -O https://swift.org/builds/swift-3.1.1-release/xcode/${SWIFT_VERSION}/${SWIFT_VERSION}-osx.pkg
