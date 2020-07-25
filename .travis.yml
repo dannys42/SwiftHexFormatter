@@ -23,6 +23,6 @@ script:
 
 
 before_install:
-  - chmod +x ./scripts/install_swift.sh
-  - ./scripts/install_swift.sh
+  - chmod +x ./.travis/install_swift.sh
+  - ./.travis/install_swift.sh
 
