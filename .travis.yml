@@ -18,6 +18,9 @@ jobs:
       language: swift
 
 script:
+ - echo " * Script Phase"
+ - env
+ - . ~/.bashrc
  - swift build
  - swift test
 

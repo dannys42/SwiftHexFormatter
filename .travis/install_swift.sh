@@ -4,11 +4,17 @@
 
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 	DIR="$(pwd)"
-	cd ..
+	cd ~/
 	export SWIFT_VERSION=swift-5.2.4
     wget https://swift.org/builds/${SWIFT_VERSION}-release/ubuntu1804/${SWIFT_VERSION}-RELEASE/${SWIFT_VERSION}-RELEASE-ubuntu18.04.tar.gz
 	tar xzf $SWIFT_VERSION-RELEASE-ubuntu18.04.tar.gz
     export PATH="${PWD}/${SWIFT_VERSION}-RELEASE-ubuntu18.04/usr/bin:${PATH}"
+    echo "* ~/.bashrc"
+    cat ~/.bashrc
+
+    echo "*~/.profile"
+    cat ~/.profile
+
     echo "export PATH=\"${PWD}/${SWIFT_VERSION}-RELEASE-ubuntu18.04/usr/bin:\${PATH}\"" >> ~/.bashrc
 	cd "$DIR"
     swift -version
