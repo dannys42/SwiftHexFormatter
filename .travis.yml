@@ -7,12 +7,15 @@ branches:
 
 language: swift
 
-matrix:
+jobs:
   include:
     - os: linux
       dist: bionic
       sudo: required
       language: cpp
+    - os: osx
+      osx_image: xcode12
+      language: swift
 
 script:
  - swift build
