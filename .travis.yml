@@ -1,0 +1,23 @@
+# Travis CI build file.
+
+# whitelist (branches that should be built)
+branches:
+  only:
+    - master
+
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      sudo: required
+      language: cpp
+
+script:
+ - swift build
+ - swift test
+
+
+before_install:
+  - chmod +x ./scripts/install_swift.sh
+  - ./scripts/install_swift.sh
+
