@@ -30,5 +30,4 @@ else
 	#export TOOLCHAINS=swift
     echo "TODO: Not available"
     env
-    false
 fi
