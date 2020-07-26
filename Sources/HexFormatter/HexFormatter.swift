@@ -130,7 +130,7 @@ public class HexFormatter: Formatter {
         let totalBytes = data.count
         let startIndex = data.startIndex
         var ndx = startOffset
-        var sbuf = NSMutableAttributedString()
+        var sbuf = NSMutableAttributedString(string: "")
         let format: String
 
         switch self.asciiStyle {
@@ -163,7 +163,7 @@ public class HexFormatter: Formatter {
     }
 
     public func attributedString(from data: Data) -> NSAttributedString {
-        var sbuf = NSMutableAttributedString()
+        var sbuf = NSMutableAttributedString(string: "")
         let totalBytes = data.count
         var ndx = 0
         let startOffset = data.startIndex
