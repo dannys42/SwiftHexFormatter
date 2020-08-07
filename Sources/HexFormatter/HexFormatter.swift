@@ -143,15 +143,15 @@ public class HexFormatter: Formatter {
         for row in 0..<self.bytesPerLine {
             if ndx < totalBytes {
                 let ch = data[ndx+startIndex]
-                if isprint(Int32(Int(ch))) == 1 {
+                if isprint(Int32(Int(ch))) == 0 {
+                    sbuf.append(self.attributedAsciiNonPrintable.prefix)
+                    sbuf.append(attributedAsciiNonPrintableReplacement)
+                    sbuf.append(self.attributedAsciiNonPrintable.suffix)
+                } else {
                     let s = String(format: "%c", ch)
                     sbuf.append(self.attributedAsciiPrintable.prefix)
                     sbuf.append(NSAttributedString(string: s))
                     sbuf.append(self.attributedAsciiPrintable.suffix)
-                } else {
-                    sbuf.append(self.attributedAsciiNonPrintable.prefix)
-                    sbuf.append(attributedAsciiNonPrintableReplacement)
-                    sbuf.append(self.attributedAsciiNonPrintable.suffix)
                 }
             } else {
                 sbuf.append(self.attributedAsciiNoDataReplacement)
