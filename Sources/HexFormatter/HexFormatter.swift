@@ -5,9 +5,10 @@ public class HexFormatter: Formatter {
     class var canonical: HexFormatter {
         let formatter = HexFormatter()
         formatter.offset.suffix = "  "
-        formatter.asciiLine.prefix = "     |"
+        formatter.asciiLine.prefix = "  |"
         formatter.asciiLine.suffix = "|"
         formatter.asciiNoDataReplacement = ""
+        formatter.byteIntervalSeparator = " "
         return formatter
     }
 
@@ -30,6 +31,28 @@ public class HexFormatter: Formatter {
 
         static let none = AttributedWrap(prefix: NSAttributedString(string: ""),
                                          suffix: NSAttributedString(string: ""))
+    }
+
+    public struct Line: Identifiable, Codable, Equatable {
+        public var id: Int { offset }
+
+        public let lineNumber: Int
+        public let offset: Int
+        public let hex: [Int?]
+        public let printable: [String?]
+    }
+
+    public struct LineString: Identifiable, Codable, Equatable {
+        public var id: Int { self.line.offset }
+        public let line: Line
+
+        public let offset: String
+        public let hex: String
+        public let printable: String
+    }
+
+    struct StringConfig {
+//        var hexSeparator: AttributedString
     }
 
     public var offsetStyle: OffsetStyle = .standard
@@ -59,6 +82,61 @@ public class HexFormatter: Formatter {
 
     public func string(from data: Data) -> String {
         return self.attributedString(from: data).string
+    }
+
+    public func forEachLine(_ data: Data, startOffset requestedStartOffset: Int=0, endOffset requestedEndOffset: Int?=nil, _ block: (Line) throws -> Void) rethrows {
+        let bytesPerLine = self.bytesPerLine
+        let startIndex = data.startIndex
+        let startLine = requestedStartOffset / bytesPerLine
+        let startOffset = startLine * bytesPerLine // bound ensure we're bounded to bytesPerLine
+
+        var ndx = startOffset
+
+        let endOffset: Int
+        if let requestedEndOffset,
+           requestedEndOffset < data.count
+        {
+            endOffset = requestedEndOffset
+        } else {
+            endOffset = data.count
+        }
+
+        var lineNumber: Int = startLine
+        while ndx < endOffset {
+            var hex: [Int?] = []
+            var printables: [String?] = []
+
+            for rowIndex in ndx..<(ndx+bytesPerLine) {
+                if rowIndex < requestedStartOffset {
+                    hex.append(nil)
+                    printables.append(nil)
+                } else if rowIndex >= endOffset {
+                    hex.append(nil)
+                    printables.append(nil)
+                } else {
+                    let ch = data[startIndex+rowIndex]
+                    hex.append(Int(ch))
+
+                    if isprint(Int32(Int(ch))) == 0 {
+                        printables.append(nil)
+                    } else {
+                        let s = String(format: "%c", ch)
+                        printables.append(s)
+                    }
+                }
+            }
+
+            let line = Line(lineNumber: lineNumber,
+                            offset: ndx,
+                            hex: hex,
+                            printable: printables)
+
+            try block(line)
+
+            ndx += bytesPerLine
+            lineNumber += 1
+
+        }
     }
 
     private func formattedOffset(_ offset: Int) -> NSAttributedString {
