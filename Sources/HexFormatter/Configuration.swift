@@ -30,6 +30,10 @@ public extension HexFormatter {
 
         public static let `default` = Configuration(offset: .default, hex: .default, ascii: .default, layout: .default)
 
+        public static let minimal = Configuration(offset: .default,
+                                                  hex: .init(bytesPerLine: 32, bytesPerWord: 32, casing: .lower, symbols: .init(noData: .init(), byteSeparator: .init(), wordSeparator: .init())),
+                                                  ascii: .default, layout: [.hex])
+
         public init(offset: Offset, hex: Hex, ascii: Ascii, layout: [Layout]) {
             self.offset = offset
             self.hex = hex
