@@ -8,13 +8,13 @@
 import Foundation
 
 public extension HexFormatter {
-    struct Configuration {
+    struct Configuration: Codable {
 
         public var offset: Offset
         public var hex: Hex
         public var ascii: Ascii
 
-        public enum Layout {
+        public enum Layout: Codable {
             case offset
             case hex
             case ascii
@@ -48,13 +48,22 @@ public extension Array where Element == HexFormatter.Configuration.Layout {
 }
 
 public extension HexFormatter.Configuration {
-    struct Spacer {
+    /// Used to specify upper/lower casing of hex values
+    enum Case: Codable {
+        case upper
+        case lower
+    }
+
+    /// MARK: Spacer Section
+
+    /// Specify how to delineate sections
+    struct Spacer: Codable {
         public var space: AttributedString
 
-        public static let none = Spacer(spacer: AttributedString(""))
-        public static let `default` = Spacer(spacer: AttributedString("  "))
-        public static let newline = Spacer(spacer: AttributedString("\n"))
-        public static let verticalBar = Spacer(spacer: AttributedString("|"))
+        public static let none = Spacer("")
+        public static let `default` = Spacer("  ")
+        public static let newline = Spacer("\n")
+        public static let verticalBar = Spacer("|")
 
         public init(spacer: AttributedString) {
             self.space = spacer
@@ -69,14 +78,9 @@ public extension HexFormatter.Configuration {
         }
     }
 
-    enum Case {
-        case upper
-        case lower
-    }
-
     // MARK: Offset Section
-    struct Offset {
-        public enum Style {
+    struct Offset: Codable {
+        public enum Style: Codable {
             case short      // 4 characters
             case standard   // 8 characters
         }
@@ -93,8 +97,8 @@ public extension HexFormatter.Configuration {
     }
 
     // MARK: Hex Section
-    struct Hex {
-        public struct Symbols {
+    struct Hex: Codable {
+        public struct Symbols: Codable {
             public var noData: AttributedString
             public var byteSeparator: AttributedString
             public var wordSeparator: AttributedString
@@ -124,11 +128,11 @@ public extension HexFormatter.Configuration {
     }
 
     // MARK: ASCII Section
-    struct Ascii {
-        public enum Style {
+    struct Ascii: Codable {
+        public enum Style: Codable {
             case standard
         }
-        public struct Symbols {
+        public struct Symbols: Codable {
             public var noData: AttributedString
             public var nonPrintable: AttributedString
             public var beginValidData: AttributedString
@@ -154,4 +158,12 @@ public extension HexFormatter.Configuration {
             self.symbols = symbols
         }
     }
+}
+
+extension HexFormatter.Configuration.Spacer: ExpressibleByStringLiteral {
+
+    public init(stringLiteral value: StringLiteralType) {
+        self.init(spacer: AttributedString(value))
+    }
+
 }
