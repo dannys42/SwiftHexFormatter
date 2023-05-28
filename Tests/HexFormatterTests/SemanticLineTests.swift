@@ -9,7 +9,7 @@ final class SemanticLineTests: XCTestCase {
             lineNumber: 0,
             offset: 0,
             hex: [0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21, nil, nil, nil],
-            printable: ["H", "e", "l", "l", "o", ",", " ", "W", "o", "r", "l", "d", "!", nil, nil, nil])
+            printable: ["H", "e", "l", "l", "o", ",", " ", "W", "o", "r", "l", "d", "!"])
 
         let formatter = HexFormatter()
         let data = inputValue.data(using: .utf8)!
@@ -23,9 +23,9 @@ final class SemanticLineTests: XCTestCase {
         let inputValue = "Hello, World!"
         let expectedValue = HexFormatter.Line(
             lineNumber: 0,
-            offset: 0,
-            hex: [nil, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21, nil, nil, nil],
-            printable: [nil, "e", "l", "l", "o", ",", " ", "W", "o", "r", "l", "d", "!", nil, nil, nil])
+            offset: 1,
+            hex: [0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21, nil, nil, nil, nil],
+            printable: ["e", "l", "l", "o", ",", " ", "W", "o", "r", "l", "d", "!"])
 
         let formatter = HexFormatter()
         let data = inputValue.data(using: .utf8)!
@@ -47,7 +47,7 @@ final class SemanticLineTests: XCTestCase {
                 lineNumber: 1,
                 offset: 0x0010,
                 hex: [0x6f, 0x72, 0x6c, 0x64, 0x21, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil ],
-                printable: [ "o", "r", "l", "d", "!",  nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil ]),
+                printable: [ "o", "r", "l", "d", "!"]),
         ]
 
         let formatter = HexFormatter()

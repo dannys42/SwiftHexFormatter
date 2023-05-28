@@ -19,10 +19,22 @@ public class HexFormatter: Formatter {
         public let printable: [String?]
     }
 
-    public func attributedString(from data: Data) -> AttributedString {
+    public func attributedString(from data: Data, offset: Int=0) -> AttributedString {
+        return self.attributedString(from: data, startOffset: offset, endOffset: nil)
+    }
+
+    public func attributedString(from data: Data, offset: PartialRangeFrom<Int>) -> AttributedString {
+        return self.attributedString(from: data, startOffset: offset.lowerBound, endOffset: nil)
+    }
+
+    public func attributedString(from data: Data, offset: ClosedRange<Int>) -> AttributedString {
+        return self.attributedString(from: data, startOffset: offset.lowerBound, endOffset: offset.upperBound)
+    }
+
+    private func attributedString(from data: Data, startOffset: Int, endOffset: Int?=nil) -> AttributedString {
         var returnString = AttributedString()
 
-        self.forEachLine(data) { attributedString, _ in
+        self.forEachLine(data, startOffset: startOffset, endOffset: endOffset) { attributedString, _ in
             returnString.append(attributedString)
         }
 
@@ -30,11 +42,36 @@ public class HexFormatter: Formatter {
     }
 
 
-    public func string(from data: Data) -> String {
-        return String(self.attributedString(from: data).characters)
+    public func string(from data: Data, offset: Int=0) -> String {
+        return self.string(from: data, startOffset: offset, endOffset: nil)
     }
 
-    public func forEachLine(_ data: Data, startOffset requestedStartOffset: Int=0, endOffset requestedEndOffset: Int?=nil, _ block: (AttributedString, Line) throws -> Void) rethrows {
+    public func string(from data: Data, offset: PartialRangeFrom<Int>) -> String {
+        return self.string(from: data, startOffset: offset.lowerBound, endOffset: nil)
+    }
+
+    public func string(from data: Data, offset: ClosedRange<Int>) -> String {
+        return self.string(from: data, startOffset: offset.lowerBound, endOffset: offset.upperBound)
+    }
+
+    private func string(from data: Data, startOffset: Int, endOffset: Int?=nil) -> String {
+        return String(self.attributedString(from: data, startOffset: startOffset, endOffset: endOffset).characters)
+    }
+
+    
+    public func forEachLine(_ data: Data, offset: Int=0, _ block: (AttributedString, Line) throws -> Void) rethrows {
+        try self.forEachLine(data, startOffset: offset, endOffset: nil, block)
+    }
+
+    public func forEachLine(_ data: Data, offset: PartialRangeFrom<Int>, _ block: (AttributedString, Line) throws -> Void) rethrows {
+        try self.forEachLine(data, startOffset: offset.lowerBound, block)
+    }
+
+    public func forEachLine(_ data: Data, offset: ClosedRange<Int>, _ block: (AttributedString, Line) throws -> Void) rethrows {
+        try self.forEachLine(data, startOffset: offset.lowerBound, endOffset: offset.upperBound, block)
+    }
+
+    private func forEachLine(_ data: Data, startOffset requestedStartOffset: Int=0, endOffset requestedEndOffset: Int?=nil, _ block: (AttributedString, Line) throws -> Void) rethrows {
 
         try self.forEachLine(data, startOffset: requestedStartOffset, endOffset: requestedEndOffset) { line in
             var attributedString = AttributedString()
@@ -55,13 +92,9 @@ public class HexFormatter: Formatter {
 
     }
 
-    public func forEachLine(_ data: Data, startOffset requestedStartOffset: Int=0, endOffset requestedEndOffset: Int?=nil, _ block: (Line) throws -> Void) rethrows {
+    public func forEachLine(_ data: Data, startOffset: Int=0, endOffset requestedEndOffset: Int?=nil, _ block: (Line) throws -> Void) rethrows {
         let bytesPerLine = self.configuration.hex.bytesPerLine
-        let startIndex = data.startIndex
-        let startLine = requestedStartOffset / bytesPerLine
-        let startOffset = startLine * bytesPerLine // bound ensure we're bounded to bytesPerLine
-
-        var ndx = startOffset
+        let startIndex = data.startIndex + startOffset
 
         let endOffset: Int
         if let requestedEndOffset,
@@ -71,21 +104,18 @@ public class HexFormatter: Formatter {
         } else {
             endOffset = data.count
         }
+        var ndx = 0
+        var lineNumber = 0
 
-        var lineNumber: Int = startLine
-        while ndx < endOffset {
+        while (ndx + startOffset) < endOffset {
             var hex: [Int?] = []
             var printables: [String?] = []
 
-            for rowIndex in ndx..<(ndx+bytesPerLine) {
-                if rowIndex < requestedStartOffset {
+            for rowIndex in 0..<bytesPerLine {
+                if (startOffset + rowIndex + ndx) >= endOffset {
                     hex.append(nil)
-                    printables.append(nil)
-                } else if rowIndex >= endOffset {
-                    hex.append(nil)
-                    printables.append(nil)
                 } else {
-                    let ch = data[startIndex+rowIndex]
+                    let ch = data[startIndex + rowIndex + ndx]
                     hex.append(Int(ch))
 
                     if isprint(Int32(Int(ch))) == 0 {
@@ -98,7 +128,7 @@ public class HexFormatter: Formatter {
             }
 
             let line = Line(lineNumber: lineNumber,
-                            offset: ndx,
+                            offset: ndx + startOffset,
                             hex: hex,
                             printable: printables)
 

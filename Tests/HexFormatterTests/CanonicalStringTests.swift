@@ -20,6 +20,7 @@ final class CanonicalStringTests: XCTestCase {
             
             """
 
+
         let formatter = HexFormatter()
         let data = inputValue.data(using: .utf8)!
         let observedValue = formatter.string(from: data)
@@ -33,8 +34,47 @@ final class CanonicalStringTests: XCTestCase {
             XCTAssertEqual(observedLines[i], expectedLines[i])
         }
         XCTAssertEqual(observedValue, expectedValue)
+    }
+
+    func testThat_MultilineWithStartOffset_IsCorrect() {
+        let inputValue = "The quick brown fox jumps over the lazy dog."
+
+        let expectedValue = """
+            00000002  65 20 71 75 69 63 6b 20  62 72 6f 77 6e 20 66 6f  |e quick brown fo|
+            00000012  78 20 6a 75 6d                                    |x jum|
+
+            """
+
+
+        let formatter = HexFormatter()
+        let data = inputValue.data(using: .utf8)!
+        let observedValue = formatter.string(from: data, offset: 2...23)
+
+        let expectedLines = expectedValue.split(separator: "\n")
+        let observedLines = observedValue.split(separator: "\n")
+
+        XCTAssertEqual(observedLines.count, expectedLines.count)
+
+        for i in 0..<observedLines.count {
+            XCTAssertEqual(observedLines[i], expectedLines[i])
+        }
+        XCTAssertEqual(observedValue, expectedValue)
+    }
+
+
+    func verifyByLine(observed: String, expected: String) throws {
+        let expectedLines = expected.split(separator: "\n")
+        let observedLines = observed.split(separator: "\n")
+
+        XCTAssertEqual(observedLines.count, expectedLines.count)
+
+        for i in 0..<observedLines.count {
+            XCTAssertEqual(observedLines[i], expectedLines[i])
+        }
+        XCTAssertEqual(observed, expected)
 
     }
+
 //    func testThat_SingleLine_IsCorrect() {
 //        let inputValue = "Hello, World!"
 //        let expectedValue = "00000000  48 65 6c 6c 6f 2c 20 57  6f 72 6c 64 21  |Hello, World!|\n" // output from: hexdump -C
