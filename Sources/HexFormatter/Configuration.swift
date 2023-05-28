@@ -10,10 +10,6 @@ import Foundation
 public extension HexFormatter {
     struct Configuration {
 
-//        public var separator: SeparatorConfiguration
-//        public var section: SectionConfiguration
-//        public var symbol: SymbolConfiguration
-
         public var offset: Offset
         public var hex: Hex
         public var ascii: Ascii
@@ -41,14 +37,6 @@ public extension HexFormatter {
             self.layout = layout
         }
 
-
-//        static let `default` = Configuration(separator: .default, section: .default, symbol: .default)
-//
-//        init(separator: SeparatorConfiguration, section: SectionConfiguration, symbol: SymbolConfiguration) {
-//            self.separator = separator
-//            self.section = section
-//            self.symbol = symbol
-//        }
     }
 }
 
@@ -166,133 +154,4 @@ public extension HexFormatter.Configuration {
             self.symbols = symbols
         }
     }
-
-
-    /*
-    public struct SeparatorConfiguration {
-        public var offsetToHexSectionSeparator: String
-        public var hexToAsciiSectionSeparator: String
-        public var hexByteSeparator: String
-        public var hexWordSeparator: String
-
-        static let `default` = SeparatorConfiguration(offsetToHexSectionSeparator: "  ",
-                                                      hexToAsciiSectionSeparator: "  ",
-                                                      hexByteSeparator: " ", hexWordSeparator: " - ")
-
-        init(offsetToHexSectionSeparator: String = Self.default.offsetToHexSectionSeparator, hexToAsciiSectionSeparator: String = Self.default.hexToAsciiSectionSeparator, hexByteSeparator: String = Self.default.hexByteSeparator, hexWordSeparator: String = Self.default.hexWordSeparator) {
-            self.offsetToHexSectionSeparator = offsetToHexSectionSeparator
-            self.hexToAsciiSectionSeparator = hexToAsciiSectionSeparator
-            self.hexByteSeparator = hexByteSeparator
-            self.hexWordSeparator = hexWordSeparator
-        }
-    }
-
-    public struct AttributedSeparatorConfiguration {
-        public var offsetToHexSectionSeparator: AttributedString
-        public var hexToAsciiSectionSeparator: AttributedString
-        public var hexByteSeparator: AttributedString
-        public var hexWordSeparator: AttributedString
-
-        static let `default` = AttributedSeparatorConfiguration(separatorConfiguration: .default)
-
-        init(offsetToHexSectionSeparator: AttributedString, hexToAsciiSectionSeparator: AttributedString, hexByteSeparator: AttributedString, hexWordSeparator: AttributedString) {
-            self.offsetToHexSectionSeparator = offsetToHexSectionSeparator
-            self.hexToAsciiSectionSeparator = hexToAsciiSectionSeparator
-            self.hexByteSeparator = hexByteSeparator
-            self.hexWordSeparator = hexWordSeparator
-        }
-
-        init(separatorConfiguration: SeparatorConfiguration) {
-            self.offsetToHexSectionSeparator = AttributedString(separatorConfiguration.offsetToHexSectionSeparator)
-            self.hexToAsciiSectionSeparator = AttributedString(separatorConfiguration.hexToAsciiSectionSeparator)
-            self.hexByteSeparator = AttributedString(separatorConfiguration.hexByteSeparator)
-            self.hexWordSeparator = AttributedString(separatorConfiguration.hexWordSeparator)
-        }
-    }
-
-    public struct SymbolConfiguration {
-        public var hexNoDataSymbol: String
-        public var asciiNonPrintableSymbol: String
-        public var asciiNoDataSymbol: String
-        public var beginningOfLineSymbol: String
-        public var endOfLineSymbol: String
-
-        static let `default` = SymbolConfiguration(hexNoDataSymbol: "  ", asciiNonPrintableSymbol: ".", asciiNoDataSymbol: " ", beginningOfLineSymbol: "", endOfLineSymbol: "\n")
-
-        init(hexNoDataSymbol: String, asciiNonPrintableSymbol: String, asciiNoDataSymbol: String, beginningOfLineSymbol: String, endOfLineSymbol: String) {
-            self.hexNoDataSymbol = hexNoDataSymbol
-            self.asciiNonPrintableSymbol = asciiNonPrintableSymbol
-            self.asciiNoDataSymbol = asciiNoDataSymbol
-            self.beginningOfLineSymbol = beginningOfLineSymbol
-            self.endOfLineSymbol = endOfLineSymbol
-        }
-    }
-
-    public struct OffsetSectionConfiguration {
-        public var style: OffsetStyle
-        public var casing: Case
-
-        static let `default` = OffsetSectionConfiguration(style: .standard, casing: .lower)
-
-        init(style: OffsetStyle, casing: Case) {
-            self.style = style
-            self.casing = casing
-        }
-    }
-
-    public struct HexSectionConfiguration {
-        public var bytesPerLine: Int
-        public var bytesPerWord: Int
-        public var casing: Case
-
-        static let `default` = HexSectionConfiguration(bytesPerLine: 16, bytesPerWord: 8, casing: .lower)
-
-        init(bytesPerLine: Int, bytesPerWord: Int, casing: Case) {
-            self.bytesPerLine = bytesPerLine
-            self.bytesPerWord = bytesPerWord
-            self.casing = casing
-        }
-    }
-
-    public struct AsciiSectionConfiguration {
-        public var style: AsciiStyle
-        public var casing: Case
-
-        static let `default` = AsciiSectionConfiguration(style: .standard, casing: .lower)
-
-        init(style: AsciiStyle, casing: Case) {
-            self.style = style
-            self.casing = casing
-        }
-    }
-
-    public struct SectionConfiguration {
-        public var offset: OffsetSectionConfiguration
-        public var hex: HexSectionConfiguration
-        public var ascii: AsciiSectionConfiguration
-
-        static let `default` = SectionConfiguration(offset: .default, hex: .default, ascii: .default)
-
-        init(offset: OffsetSectionConfiguration, hex: HexSectionConfiguration, ascii: AsciiSectionConfiguration) {
-            self.offset = offset
-            self.hex = hex
-            self.ascii = ascii
-        }
-    }
-
-    public enum OffsetStyle {
-        case disable
-        case short      // 4 characters
-        case standard   // 8 characters
-    }
-    public enum AsciiStyle {
-        case disable
-        case standard
-    }
-    public enum Case {
-        case upper
-        case lower
-    }
-     */
-
 }
