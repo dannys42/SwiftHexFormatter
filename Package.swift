@@ -11,6 +11,9 @@ let package = Package(
         .library(
             name: "HexFormatter",
             targets: ["HexFormatter"]),
+        .library(
+            name: "HexFormatterUI",
+            targets: ["HexFormatterUI"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -22,6 +25,9 @@ let package = Package(
         .target(
             name: "HexFormatter",
             dependencies: []),
+        .target(
+            name: "HexFormatterUI",
+            dependencies: [ "HexFormatter" ]),
         .testTarget(
             name: "HexFormatterTests",
             dependencies: ["HexFormatter"]),
