@@ -30,7 +30,7 @@ final class SemanticLineTests: XCTestCase {
         let formatter = HexFormatter()
         let data = inputValue.data(using: .utf8)!
 
-        formatter.forEachLine(data, startOffset: 1) { line in
+        formatter.forEachLine(data, offset: 1) { line in
             XCTAssertEqual(line, expectedValue)
         }
     }
@@ -54,7 +54,7 @@ final class SemanticLineTests: XCTestCase {
         let data = inputValue.data(using: .utf8)!
 
         var observedValue: [HexFormatter.Line] = []
-        formatter.forEachLine(data, startOffset: 0) { line in
+        formatter.forEachLine(data, offset: 0) { line in
             observedValue.append(line)
         }
 
