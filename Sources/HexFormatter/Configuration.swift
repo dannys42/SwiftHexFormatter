@@ -14,7 +14,7 @@ public extension HexFormatter {
         public var hex: Hex
         public var ascii: Ascii
 
-        public enum Layout: Codable {
+        public enum Layout: Codable, Hashable {
             case offset
             case hex
             case ascii
@@ -57,7 +57,7 @@ public extension HexFormatter.Configuration {
     /// MARK: Spacer Section
 
     /// Specify how to delineate sections
-    struct Spacer: Codable {
+    struct Spacer: Codable, Hashable {
         public var space: AttributedString
 
         public static let none = Spacer("")

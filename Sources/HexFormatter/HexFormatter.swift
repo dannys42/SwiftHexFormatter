@@ -46,8 +46,8 @@ public class HexFormatter: Formatter {
     private func attributedString(from data: Data, startOffset: Int, endOffset: Int?=nil) -> AttributedString {
         var returnString = AttributedString()
 
-        self.forEachLine(data, startOffset: startOffset, endOffset: endOffset) { attributedString, _ in
-            returnString.append(attributedString)
+        self.forEachFormattedLine(data, startOffset: startOffset, endOffset: endOffset) { formattedLine in
+            returnString.append(formattedLine.attributedString)
         }
 
         return returnString

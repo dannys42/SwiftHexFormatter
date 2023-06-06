@@ -18,15 +18,52 @@ public extension HexFormatter {
         public let printable: [String?]
     }
 
-    // MARK: Iterate through each line and provided formatted hex as `AttributedString`s
+    struct FormattedLine: Identifiable, Equatable {
+        public var id: Int { line.id }
+        public let line: Line
+        public let attributedString: AttributedString
+
+        public enum Section: Equatable {
+            case spacer(AttributedString)
+            case offset(AttributedString)
+            case hex(AttributedString)
+            case ascii(AttributedString)
+
+            public var attributedString: AttributedString {
+                switch self {
+                case .spacer(let value), .offset(let value), .hex(let value), .ascii(let value):
+                    return value
+                }
+            }
+        }
+
+        public let sections: [Section]
+
+        init(line: Line, sections: [Section]) {
+            self.line = line
+            self.sections = sections
+
+            var lineString = AttributedString()
+            for section in self.sections {
+                switch section {
+                case .spacer(let aString), .offset(let aString), .hex(let aString), .ascii(let aString):
+                    lineString.append(aString)
+                }
+
+            }
+            self.attributedString = lineString
+        }
+    }
+
+    // MARK: FormattedLines - provides AttributedStrings for each line
 
     /// Iterate through each line of a hexdump
     /// - Parameters:
     ///   - data: The data to read
     ///   - offset: Starting offset to read from
     ///   - block: block to call for every line of formatted hex
-    func forEachLine(_ data: Data, offset: Int=0, _ block: (AttributedString, Line) throws -> Void) rethrows {
-        try self.forEachLine(data, startOffset: offset, endOffset: nil, block)
+    func forEachFormattedLine(_ data: Data, offset: Int=0, _ block: (FormattedLine) throws -> Void) rethrows {
+        try self.forEachFormattedLine(data, startOffset: offset, endOffset: nil, block)
     }
 
     /// Iterate through each line of a hexdump
@@ -34,8 +71,8 @@ public extension HexFormatter {
     ///   - data: The data to read
     ///   - offset: range specifying starting offset to read from
     ///   - block: block to call for every line of formatted hex
-    func forEachLine(_ data: Data, offset: PartialRangeFrom<Int>, _ block: (AttributedString, Line) throws -> Void) rethrows {
-        try self.forEachLine(data, startOffset: offset.lowerBound, block)
+    func forEachFormattedLine(_ data: Data, offset: PartialRangeFrom<Int>, _ block: (FormattedLine) throws -> Void) rethrows {
+        try self.forEachFormattedLine(data, startOffset: offset.lowerBound, block)
     }
 
     /// Iterate through each line of a hexdump
@@ -43,11 +80,11 @@ public extension HexFormatter {
     ///   - data: The data to read
     ///   - offset: range specifying starting and ending offset to read
     ///   - block: block to call for every line of formatted hex
-    func forEachLine(_ data: Data, offset: ClosedRange<Int>, _ block: (AttributedString, Line) throws -> Void) rethrows {
-        try self.forEachLine(data, startOffset: offset.lowerBound, endOffset: offset.upperBound, block)
+    func forEachFormattedLine(_ data: Data, offset: ClosedRange<Int>, _ block: (FormattedLine) throws -> Void) rethrows {
+        try self.forEachFormattedLine(data, startOffset: offset.lowerBound, endOffset: offset.upperBound, block)
     }
 
-    // MARK: Line
+    // MARK: Line - provides base data for a line
 
     /// Iterate through each line of a hexdump
     /// - Parameters:
@@ -78,24 +115,25 @@ public extension HexFormatter {
 
 
     // MARK: - Internal Methods
-
-    internal func forEachLine(_ data: Data, startOffset requestedStartOffset: Int=0, endOffset requestedEndOffset: Int?=nil, _ block: (AttributedString, Line) throws -> Void) rethrows {
+    internal func forEachFormattedLine(_ data: Data, startOffset requestedStartOffset: Int=0, endOffset requestedEndOffset: Int?=nil, _ block: (FormattedLine) throws -> Void) rethrows {
 
         try self.forEachLine(data, startOffset: requestedStartOffset, endOffset: requestedEndOffset) { line in
-            var attributedString = AttributedString()
+            var sections: [FormattedLine.Section] = []
+
             for section in self.configuration.layout {
                 switch section {
                 case .spacer(let spacer):
-                    attributedString.append(spacer.space)
+                    sections.append(.spacer(spacer.space))
                 case .offset:
-                    attributedString.append(line.formattedOffset(configuration: self.configuration.offset))
+                    sections.append(.offset(line.formattedOffset(configuration: self.configuration.offset)))
                 case .hex:
-                    attributedString.append(line.formattedHex(configuration: self.configuration.hex))
+                    sections.append(.hex(line.formattedHex(configuration: self.configuration.hex)))
                 case .ascii:
-                    attributedString.append(line.formattedAscii(configuration: self.configuration.ascii))
+                    sections.append(.ascii(line.formattedAscii(configuration: self.configuration.ascii)))
                 }
             }
-            try block(attributedString, line)
+            let formattedLine = FormattedLine(line: line, sections: sections)
+            try block(formattedLine)
         }
     }
 
