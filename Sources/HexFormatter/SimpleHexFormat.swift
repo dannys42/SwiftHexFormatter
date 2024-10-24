@@ -33,7 +33,7 @@ public struct SimpleHexByteFormat: FormatStyle {
     }
 }
 
-extension FormatStyle where Self == AttributedSimpleHexByteFormat {
+extension FormatStyle where Self == SimpleHexByteFormat {
     public static func simpleHexByteFormat(style: AttributedSimpleHexByteFormat.Style = .none) -> SimpleHexByteFormat {
         
         SimpleHexByteFormat(style: style)
