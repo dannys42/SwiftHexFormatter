@@ -19,48 +19,56 @@ public struct AttributedSimpleHexByteFormat: FormatStyle {
         case cStylePrefix
         case hSuffix
     }
-    
-    let prefix: AttributedString?
-    let suffix: AttributedString?
-    let byteSeparator: AttributedString?
-    
-    init(prefix: AttributedString?=nil, suffix: AttributedString?=nil, byteSeparator: AttributedString?=nil) {
-        self.prefix = prefix
-        self.suffix = suffix
-        self.byteSeparator = byteSeparator
-    }
-    init(prefix: String?=nil, suffix: String?=nil, byteSeparator: String?=nil) {
-        if let prefix {
-            self.prefix = AttributedString(prefix)
-        } else {
+    public struct CustomStyle: Codable, Equatable, Hashable {
+        public var prefix: AttributedString?
+        public var suffix: AttributedString?
+        public var byteSeparator: AttributedString?
+        
+        public init() {
             self.prefix = nil
-        }
-        if let suffix {
-            self.suffix = AttributedString(suffix)
-        } else {
             self.suffix = nil
-        }
-        if let byteSeparator {
-            self.byteSeparator = AttributedString(byteSeparator)
-        } else {
             self.byteSeparator = nil
         }
+
+        public init(prefix: AttributedString?, suffix: AttributedString?, byteSeparator: AttributedString?) {
+            self.prefix = prefix
+            self.suffix = suffix
+            self.byteSeparator = byteSeparator
+        }
+        
+        public init(prefix: String?=nil, suffix: String?=nil, byteSeparator: String?=nil) {
+            if let prefix {
+                self.prefix = AttributedString(prefix)
+            } else {
+                self.prefix = nil
+            }
+            if let suffix {
+                self.suffix = AttributedString(suffix)
+            } else {
+                self.suffix = nil
+            }
+            if let byteSeparator {
+                self.byteSeparator = AttributedString(byteSeparator)
+            } else {
+                self.byteSeparator = nil
+            }
+        }
     }
     
-    init() {
-        self.prefix = nil
-        self.suffix = nil
-        self.byteSeparator = nil
+    var customStyle: CustomStyle
+    
+    public init(_ customStyle: CustomStyle) {
+        self.customStyle = customStyle
     }
-
-    init(style: Style) {
+    
+    public init(style: Style) {
         switch style {
         case .none:
-            self.init()
+            self.init(CustomStyle())
         case .cStylePrefix:
-            self.init(prefix: "0x")
+            self.init(CustomStyle(prefix: "0x"))
         case .hSuffix:
-            self.init(suffix: "h")
+            self.init(CustomStyle(suffix: "h"))
         }
     }
     
@@ -69,7 +77,7 @@ public struct AttributedSimpleHexByteFormat: FormatStyle {
         value.withUnsafeBytes { bufferPointer in
             let emptyString = AttributedString()
             
-            var aString = prefix ?? emptyString
+            var aString = self.customStyle.prefix ?? emptyString
             
             let data = Data(bufferPointer)
             
@@ -77,13 +85,13 @@ public struct AttributedSimpleHexByteFormat: FormatStyle {
                 let hexByte = String(format: "%02x", byte)
                 aString += AttributedString(hexByte)
                 
-                if let byteSeparator,
+                if let byteSeparator = self.customStyle.byteSeparator,
                     index < bufferPointer.count {
                     aString += byteSeparator
                 }
             }
 
-            return aString + (suffix ?? emptyString)
+            return aString + (self.customStyle.suffix ?? emptyString)
         }
     }
 }
@@ -93,4 +101,10 @@ extension FormatStyle where Self == AttributedSimpleHexByteFormat {
         
         AttributedSimpleHexByteFormat(style: style)
     }
+    
+    public static func simpleHexByteFormat(customStyle: AttributedSimpleHexByteFormat.CustomStyle) -> AttributedSimpleHexByteFormat {
+        
+        AttributedSimpleHexByteFormat(customStyle)
+    }
+
 }

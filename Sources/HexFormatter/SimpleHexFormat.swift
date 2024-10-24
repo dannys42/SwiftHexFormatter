@@ -16,8 +16,8 @@ public struct SimpleHexByteFormat: FormatStyle {
     
     let attributedFormatter: AttributedSimpleHexByteFormat
     
-    init(prefix: String?=nil, suffix: String?=nil, byteSeparator: String?=nil) {
-        self.attributedFormatter = AttributedSimpleHexByteFormat(prefix: prefix, suffix: suffix, byteSeparator: byteSeparator)
+    init(customStyle: AttributedSimpleHexByteFormat.CustomStyle) {
+        self.attributedFormatter = AttributedSimpleHexByteFormat(customStyle)
     }
     
     init(style: AttributedSimpleHexByteFormat.Style) {
@@ -38,4 +38,10 @@ extension FormatStyle where Self == AttributedSimpleHexByteFormat {
         
         SimpleHexByteFormat(style: style)
     }
+    
+    public static func simpleHexByteFormat(customStyle: AttributedSimpleHexByteFormat.CustomStyle) -> SimpleHexByteFormat {
+        
+        SimpleHexByteFormat(customStyle: customStyle)
+    }
+
 }
