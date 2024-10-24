@@ -97,12 +97,16 @@ public struct AttributedSimpleHexByteFormat: FormatStyle {
 }
 
 extension FormatStyle where Self == AttributedSimpleHexByteFormat {
-    public static func simpleHexByteFormat(style: AttributedSimpleHexByteFormat.Style = .none) -> AttributedSimpleHexByteFormat {
+    public static func attributedSimpleHexByteFormat() -> AttributedSimpleHexByteFormat {
+        Self.attributedSimpleHexByteFormat(style: .none)
+    }
+        
+    public static func attributedSimpleHexByteFormat(style: AttributedSimpleHexByteFormat.Style) -> AttributedSimpleHexByteFormat {
         
         AttributedSimpleHexByteFormat(style: style)
     }
     
-    public static func simpleHexByteFormat(customStyle: AttributedSimpleHexByteFormat.CustomStyle) -> AttributedSimpleHexByteFormat {
+    public static func attributedSimpleHexByteFormat(customStyle: AttributedSimpleHexByteFormat.CustomStyle) -> AttributedSimpleHexByteFormat {
         
         AttributedSimpleHexByteFormat(customStyle)
     }

@@ -24,6 +24,10 @@ public struct SimpleHexByteFormat: FormatStyle {
         self.attributedFormatter = AttributedSimpleHexByteFormat(style: style)
     }
     
+    init() {
+        self.attributedFormatter = AttributedSimpleHexByteFormat(style: .none)
+    }
+    
     public func format(_ value: FormatInput) -> String {
         let aString = self.attributedFormatter.format(value)
         
@@ -34,7 +38,12 @@ public struct SimpleHexByteFormat: FormatStyle {
 }
 
 extension FormatStyle where Self == SimpleHexByteFormat {
-    public static func simpleHexByteFormat(style: AttributedSimpleHexByteFormat.Style = .none) -> SimpleHexByteFormat {
+    public static func simpleHexByteFormat() -> SimpleHexByteFormat {
+        
+        SimpleHexByteFormat(style: .none)
+    }
+    
+    public static func simpleHexByteFormat(style: AttributedSimpleHexByteFormat.Style) -> SimpleHexByteFormat {
         
         SimpleHexByteFormat(style: style)
     }
